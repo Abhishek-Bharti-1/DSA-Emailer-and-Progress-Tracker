@@ -1,0 +1,452 @@
+[
+  {
+    "id": "gfg-0001",
+    "title": "Subarray with given sum",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/subarray-with-given-sum-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0002",
+    "title": "Count Inversions",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/inversion-of-array-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0003",
+    "title": "Kadane's Algorithm",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/kadanes-algorithm-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0004",
+    "title": "Merge Without Extra Space",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/merge-two-sorted-arrays-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0005",
+    "title": "Minimum Platforms",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/minimum-platforms-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0006",
+    "title": "Stock Buy and Sell",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/stock-buy-and-sell2611/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0007",
+    "title": "Trapping Rain Water",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/trapping-rain-water-1587115621/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0008",
+    "title": "Equilibrium Point",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/equilibrium-point-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0009",
+    "title": "Reverse Words",
+    "topic": "Strings",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/reverse-words-in-a-given-string5459/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0010",
+    "title": "Longest Palindrome in a String",
+    "topic": "Strings",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/longest-palindrome-in-a-string3411/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0011",
+    "title": "Implement Atoi",
+    "topic": "Strings",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/implement-atoi/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0012",
+    "title": "Longest Distinct Characters in String",
+    "topic": "Strings",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/longest-distinct-characters-in-string5848/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0013",
+    "title": "Parenthesis Checker",
+    "topic": "Strings",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/parenthesis-checker2744/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0014",
+    "title": "Finding Middle Element",
+    "topic": "Linked Lists",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/finding-middle-element-in-a-linked-list/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0015",
+    "title": "Reverse a Linked List",
+    "topic": "Linked Lists",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/reverse-a-linked-list/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0016",
+    "title": "Detect Loop",
+    "topic": "Linked Lists",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/detect-loop-in-linked-list/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0017",
+    "title": "Remove Loop",
+    "topic": "Linked Lists",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/remove-loop-in-linked-list/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0018",
+    "title": "Merge Two Sorted Linked Lists",
+    "topic": "Linked Lists",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/merge-two-sorted-linked-lists/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0019",
+    "title": "Height of Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/height-of-binary-tree/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0020",
+    "title": "Level Order Traversal",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/level-order-traversal/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0021",
+    "title": "Diameter of Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/diameter-of-binary-tree/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0022",
+    "title": "Left View of Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/left-view-of-binary-tree/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0023",
+    "title": "Connect Nodes at Same Level",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/connect-nodes-at-same-level/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0024",
+    "title": "Serialize and Deserialize a Binary Tree",
+    "topic": "Trees",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/serialize-and-deserialize-a-binary-tree/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0025",
+    "title": "BFS of Graph",
+    "topic": "Graphs",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/bfs-traversal-of-graph/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0026",
+    "title": "DFS of Graph",
+    "topic": "Graphs",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/depth-first-traversal-for-a-graph/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0027",
+    "title": "Detect Cycle in Directed Graph",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0028",
+    "title": "Topological Sort",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/topological-sort/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0029",
+    "title": "Shortest Path in Undirected Graph",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/shortest-path-in-undirected-graph-having-unit-distance/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0030",
+    "title": "Nth Fibonacci Number",
+    "topic": "Dynamic Programming",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/nth-fibonacci-number1335/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0031",
+    "title": "0-1 Knapsack Problem",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/0-1-knapsack-problem0945/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0032",
+    "title": "Longest Common Subsequence",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/longest-common-subsequence-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0033",
+    "title": "Longest Increasing Subsequence",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/longest-increasing-subsequence-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0034",
+    "title": "Coin Change",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/coin-change2448/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0035",
+    "title": "Edit Distance",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/edit-distance3702/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0036",
+    "title": "Activity Selection",
+    "topic": "Greedy",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/activity-selection-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0037",
+    "title": "N Meetings in One Room",
+    "topic": "Greedy",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/n-meetings-in-one-room-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0038",
+    "title": "Job Sequencing Problem",
+    "topic": "Greedy",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/job-sequencing-problem-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0039",
+    "title": "Fractional Knapsack",
+    "topic": "Greedy",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/fractional-knapsack-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0040",
+    "title": "Next Greater Element",
+    "topic": "Stacks & Queues",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/next-larger-element-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0041",
+    "title": "Stock Span Problem",
+    "topic": "Stacks & Queues",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/stock-span-problem-1587115621/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0042",
+    "title": "Get Min from Stack",
+    "topic": "Stacks & Queues",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/get-minimum-element-from-stack/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0043",
+    "title": "Queue using Two Stacks",
+    "topic": "Stacks & Queues",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/queue-using-two-stacks/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0044",
+    "title": "Kth Largest Element",
+    "topic": "Heaps",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/kth-largest-element2534/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0045",
+    "title": "Merge K Sorted Lists",
+    "topic": "Heaps",
+    "difficulty": "Hard",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/merge-k-sorted-linked-lists/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0046",
+    "title": "Median in a Stream",
+    "topic": "Heaps",
+    "difficulty": "Hard",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/find-median-in-a-stream-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0047",
+    "title": "Floor in a Sorted Array",
+    "topic": "Binary Search",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/floor-in-a-sorted-array-1587115620/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0048",
+    "title": "Peak Element",
+    "topic": "Binary Search",
+    "difficulty": "Easy",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/peak-element/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0049",
+    "title": "Allocate Minimum Pages",
+    "topic": "Binary Search",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/allocate-minimum-number-of-pages0937/",
+    "platform": "gfg"
+  },
+  {
+    "id": "gfg-0050",
+    "title": "Aggressive Cows",
+    "topic": "Binary Search",
+    "difficulty": "Medium",
+    "source": "gfg",
+    "url": "https://www.geeksforgeeks.org/problems/aggressive-cows/",
+    "platform": "gfg"
+  }
+]

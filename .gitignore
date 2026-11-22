@@ -1,0 +1,18 @@
+# Environment
+.env
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# State files are tracked (needed for persistence across GitHub Actions runs)
+# Do NOT ignore data/sent_log.json or data/problem_cache.json

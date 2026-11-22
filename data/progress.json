@@ -1,0 +1,24 @@
+{
+  "total_sent": 4,
+  "by_source": {
+    "a2z_sheet": 3,
+    "leetcode": 1
+  },
+  "by_topic": {
+    "Arrays": 1,
+    "Dynamic Programming": 1,
+    "Strings": 1,
+    "Math": 1
+  },
+  "by_difficulty": {
+    "Easy": 1,
+    "Medium": 2,
+    "Hard": 1
+  },
+  "streak_days": 1,
+  "a2z_total": 182,
+  "a2z_sent": 3,
+  "dates": [
+    "2026-11-22"
+  ]
+}
