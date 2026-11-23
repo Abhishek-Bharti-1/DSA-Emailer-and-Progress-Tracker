@@ -381,3 +381,16 @@ class StateManager:
                 return data
             logger.warning("Cache file %s did not contain a list; returning empty list", self.cache_path)
             return []
+
+    def reset_state(self, clear_cache: bool = False) -> None:
+        """
+        Resets sent problems log and analytics to start afresh.
+        If clear_cache is True, also empties the problem cache.
+        """
+        with self._lock:
+            self._atomic_write_json(self.sent_log_path, [])
+            fresh_progress = self._compute_progress([])
+            self._atomic_write_json(self.progress_path, fresh_progress)
+            if clear_cache:
+                self._atomic_write_json(self.cache_path, [])
+            logger.info("Persistent state reset successfully (clear_cache=%s).", clear_cache)

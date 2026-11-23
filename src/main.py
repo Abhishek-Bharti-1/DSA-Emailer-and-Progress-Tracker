@@ -568,6 +568,21 @@ def handle_test_email(recipient_override: Optional[str] = None) -> int:
         return 1
 
 
+def handle_reset(clear_cache: bool = False) -> int:
+    """Reset sent log and progress analytics back to zero."""
+    state_mgr = StateManager()
+    state_mgr.reset_state(clear_cache=clear_cache)
+    print("\n[OK] SUCCESS: System reset successfully!")
+    print("  - Sent problems history: cleared (count = 0)")
+    print("  - Analytics & streak: reset to 0")
+    if clear_cache:
+        print("  - Problem cache: cleared (will re-fetch on next run)\n")
+    else:
+        cached_count = len(state_mgr.load_cache())
+        print(f"  - Problem cache: preserved ({cached_count} problems available to select from)\n")
+    return 0
+
+
 # ── Argument Parser ──────────────────────────────────────────────────────────
 
 def build_parser() -> argparse.ArgumentParser:
@@ -624,6 +639,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Recipient email address override (defaults to RECIPIENT_EMAIL in config)",
     )
 
+    # reset — Reset sent problems and analytics
+    reset_parser = subparsers.add_parser(
+        "reset",
+        help="Reset sent problems history and analytics to start afresh",
+        description="Clear sent problems log and reset all analytics and streak back to zero.",
+    )
+    reset_parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Also clear the cached problems pool (problem_cache.json)",
+    )
+
     return parser
 
 
@@ -646,6 +673,8 @@ def main(argv: Optional[list[str]] = None) -> int:
         return handle_stats()
     elif args.command == "test-email":
         return handle_test_email(recipient_override=getattr(args, "recipient", None))
+    elif args.command == "reset":
+        return handle_reset(clear_cache=getattr(args, "all", False))
     else:
         parser.print_help()
         return 1

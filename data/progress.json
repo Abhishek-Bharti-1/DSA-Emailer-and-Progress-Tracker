@@ -1,52 +1,10 @@
 {
-  "total_sent": 20,
-  "by_source": {
-    "a2z_sheet": 12,
-    "leetcode": 8
-  },
-  "by_topic": {
-    "Arrays": 5,
-    "Dynamic Programming": 5,
-    "Strings": 2,
-    "Math": 1,
-    "Stacks & Queues": 1,
-    "Greedy": 1,
-    "Heaps": 1,
-    "Graphs": 2,
-    "Binary Search Trees": 1,
-    "Binary Search": 1
-  },
-  "by_difficulty": {
-    "Easy": 5,
-    "Medium": 10,
-    "Hard": 5
-  },
-  "streak_days": 2,
+  "total_sent": 0,
+  "by_source": {},
+  "by_topic": {},
+  "by_difficulty": {},
+  "streak_days": 0,
   "a2z_total": 182,
-  "a2z_sent": 12,
-  "total_sent": 12,
-  "by_source": {
-    "a2z_sheet": 9,
-    "leetcode": 3
-  },
-  "by_topic": {
-    "Arrays": 3,
-    "Dynamic Programming": 3,
-    "Strings": 2,
-    "Math": 2,
-    "Stacks & Queues": 1,
-    "Sorting": 1
-  },
-  "by_difficulty": {
-    "Easy": 3,
-    "Medium": 6,
-    "Hard": 3
-  },
-  "streak_days": 2,
-  "a2z_total": 182,
-  "a2z_sent": 9,
-  "dates": [
-    "2026-11-22",
-    "2026-11-23"
-  ]
+  "a2z_sent": 0,
+  "dates": []
 }
