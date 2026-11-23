@@ -335,7 +335,7 @@ def _generate_ai_weekly_insights(stats: dict[str, Any]) -> str:
         "- Continue focusing on topics with fewer solved problems to build comprehensive mastery."
     )
 
-    api_key = getattr(config, "GEMINI_API_KEY", "") or os.getenv("GEMINI_API_KEY", "")
+    api_key = (getattr(config, "GEMINI_API_KEY", "") or os.getenv("GEMINI_API_KEY", "")).strip().replace("\ufeff", "")
     if genai is None or not api_key:
         return default_insights
 
@@ -379,7 +379,7 @@ def run_daily_agent() -> bool:
 
     logger.info("Initiating run_daily_agent...")
 
-    api_key = getattr(config, "GEMINI_API_KEY", "") or os.getenv("GEMINI_API_KEY", "")
+    api_key = (getattr(config, "GEMINI_API_KEY", "") or os.getenv("GEMINI_API_KEY", "")).strip().replace("\ufeff", "")
     if not api_key:
         logger.error("Cannot run daily agent: GEMINI_API_KEY is not configured.")
         return False
@@ -545,7 +545,7 @@ def run_weekly_agent() -> bool:
 
     logger.info("Initiating run_weekly_agent...")
 
-    api_key = getattr(config, "GEMINI_API_KEY", "") or os.getenv("GEMINI_API_KEY", "")
+    api_key = (getattr(config, "GEMINI_API_KEY", "") or os.getenv("GEMINI_API_KEY", "")).strip().replace("\ufeff", "")
     if not api_key:
         logger.error("Cannot run weekly agent: GEMINI_API_KEY is not configured.")
         return False

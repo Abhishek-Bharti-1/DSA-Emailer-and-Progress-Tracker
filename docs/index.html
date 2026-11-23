@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Daily Tracker & Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧩</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #f3f4f6;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #111827;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white custom-scrollbar">
+
+  <!-- Top Navbar -->
+  <header class="sticky top-0 z-40 w-full border-b border-gray-800 bg-[#0b0f19]/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <span class="text-xl">🧩</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-lg text-white tracking-tight">DSA Problem Tracker</h1>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">v1.0</span>
+          </div>
+          <p class="text-xs text-gray-400 hidden sm:block">Automated AI Daily Practice & Progress Monitoring</p>
+        </div>
+      </div>
+
+      <!-- Right Actions: Connection Badge & Refresh -->
+      <div class="flex items-center gap-3">
+        <!-- Live Connection Status Badge -->
+        <div id="connectionStatus" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800/80 border border-gray-700/60 text-xs text-gray-300 font-medium">
+          <span class="relative flex h-2 w-2">
+            <span id="statusPulse" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span id="statusDot" class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+          </span>
+          <span id="statusText">Connecting...</span>
+        </div>
+
+        <!-- Refresh Button -->
+        <button id="btnRefresh" title="Refresh data from Firestore" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white border border-gray-700 transition">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- 1. Stats KPI Cards Grid -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      
+      <!-- Current Streak Card -->
+      <div class="rounded-2xl bg-gradient-to-br from-gray-900 to-[#121829] border border-gray-800 p-5 shadow-xl relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-orange-500/10 rounded-full blur-xl group-hover:bg-orange-500/20 transition"></div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Current Streak</span>
+          <div class="p-2 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20">
+            <i data-lucide="flame" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="mt-4 flex items-baseline gap-2">
+          <span id="statStreak" class="text-3xl font-extrabold text-white font-mono">0</span>
+          <span class="text-sm font-medium text-gray-400">days</span>
+        </div>
+        <div class="mt-2 text-xs text-gray-400 flex items-center gap-1.5">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-gray-500"></i>
+          <span>Daily consistency</span>
+        </div>
+      </div>
+
+      <!-- Total Sent Problems Card -->
+      <div class="rounded-2xl bg-gradient-to-br from-gray-900 to-[#121829] border border-gray-800 p-5 shadow-xl relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition"></div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Sent</span>
+          <div class="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <i data-lucide="send" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="mt-4 flex items-baseline gap-2">
+          <span id="statTotalSent" class="text-3xl font-extrabold text-white font-mono">0</span>
+          <span class="text-sm font-medium text-gray-400">problems</span>
+        </div>
+        <div class="mt-2 text-xs text-gray-400 flex items-center gap-1.5">
+          <i data-lucide="layers" class="w-3.5 h-3.5 text-gray-500"></i>
+          <span id="statSolvedCount">0 marked solved (0%)</span>
+        </div>
+      </div>
+
+      <!-- Striver A2Z Sheet Progress Card -->
+      <div class="rounded-2xl bg-gradient-to-br from-gray-900 to-[#121829] border border-gray-800 p-5 shadow-xl relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition"></div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Striver A2Z Sheet</span>
+          <div class="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <i data-lucide="award" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="mt-4 flex items-baseline gap-2">
+          <span id="statA2ZPercent" class="text-3xl font-extrabold text-white font-mono">0%</span>
+          <span id="statA2ZRatio" class="text-xs text-gray-400 font-mono">(0 / 455)</span>
+        </div>
+        <div class="mt-3 w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+          <div id="statA2ZBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Solved Log Card -->
+      <div class="rounded-2xl bg-gradient-to-br from-gray-900 to-[#121829] border border-gray-800 p-5 shadow-xl relative overflow-hidden group">
+        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition"></div>
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-400">Your Solved Log</span>
+          <div class="p-2 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
+            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+          </div>
+        </div>
+        <div class="mt-4 flex items-baseline gap-2">
+          <span id="statSolvedUser" class="text-3xl font-extrabold text-white font-mono">0</span>
+          <span class="text-sm font-medium text-gray-400">completed</span>
+        </div>
+        <div class="mt-2 text-xs text-gray-400 flex items-center gap-1.5">
+          <i data-lucide="bookmark" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span id="statBookmarkedCount">0 bookmarked for revision</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 2. Charts & Analytics Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Difficulty Distribution Chart -->
+      <div class="rounded-2xl bg-gray-900/90 border border-gray-800 p-5 shadow-xl flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400"></i>
+              <h2 class="font-semibold text-sm text-gray-200">Difficulty Distribution</h2>
+            </div>
+            <span class="text-[11px] text-gray-400">Sent Problems</span>
+          </div>
+          <div class="relative h-56 flex items-center justify-center">
+            <canvas id="difficultyChart"></canvas>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-800/80 text-center">
+          <div class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            <span class="text-xs font-medium text-emerald-400">Easy</span>
+            <p id="countEasy" class="font-mono text-base font-bold text-white mt-0.5">0</p>
+          </div>
+          <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+            <span class="text-xs font-medium text-amber-400">Medium</span>
+            <p id="countMedium" class="font-mono text-base font-bold text-white mt-0.5">0</p>
+          </div>
+          <div class="p-2 rounded-xl bg-rose-500/10 border border-rose-500/20">
+            <span class="text-xs font-medium text-rose-400">Hard</span>
+            <p id="countHard" class="font-mono text-base font-bold text-white mt-0.5">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topic Coverage Chart (spans 2 columns) -->
+      <div class="lg:col-span-2 rounded-2xl bg-gray-900/90 border border-gray-800 p-5 shadow-xl flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-400"></i>
+            <h2 class="font-semibold text-sm text-gray-200">Topic Coverage Breakdown</h2>
+          </div>
+          <span id="topicCountTotal" class="text-[11px] text-gray-400 font-mono">0 topics</span>
+        </div>
+        <div class="relative h-64">
+          <canvas id="topicsChart"></canvas>
+        </div>
+        <div id="sourcesBadges" class="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-gray-800/80 text-xs text-gray-400">
+          <span class="text-gray-500 font-medium mr-1">Sources:</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 3. Question Directory & History Table -->
+    <section class="rounded-2xl bg-gray-900/90 border border-gray-800 shadow-xl overflow-hidden">
+      
+      <!-- Table Header & Controls Bar -->
+      <div class="p-5 border-b border-gray-800 space-y-4">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="font-bold text-base text-white flex items-center gap-2">
+              <i data-lucide="list-ordered" class="w-4 h-4 text-indigo-400"></i>
+              Dispatched Questions Directory
+            </h2>
+            <p class="text-xs text-gray-400 mt-0.5">Search, filter, track completion, and solve directly</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span id="showingCountBadge" class="text-xs font-mono px-3 py-1 rounded-full bg-gray-800 text-gray-300 border border-gray-700">
+              Showing 0 problems
+            </span>
+          </div>
+        </div>
+
+        <!-- Filters Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
+          
+          <!-- Search Input -->
+          <div class="lg:col-span-2 relative">
+            <i data-lucide="search" class="w-4 h-4 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input 
+              id="searchInput"
+              type="text" 
+              placeholder="Search by title, topic, or ID..." 
+              class="w-full pl-9 pr-4 py-2 rounded-xl bg-gray-800/80 border border-gray-700/80 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+            />
+          </div>
+
+          <!-- Difficulty Filter -->
+          <div>
+            <select id="filterDifficulty" class="w-full px-3 py-2 rounded-xl bg-gray-800/80 border border-gray-700/80 text-sm text-gray-300 focus:outline-none focus:border-indigo-500 transition">
+              <option value="ALL">All Difficulties</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
+
+          <!-- Topic Filter -->
+          <div>
+            <select id="filterTopic" class="w-full px-3 py-2 rounded-xl bg-gray-800/80 border border-gray-700/80 text-sm text-gray-300 focus:outline-none focus:border-indigo-500 transition">
+              <option value="ALL">All Topics</option>
+            </select>
+          </div>
+
+          <!-- Status Filter -->
+          <div>
+            <select id="filterStatus" class="w-full px-3 py-2 rounded-xl bg-gray-800/80 border border-gray-700/80 text-sm text-gray-300 focus:outline-none focus:border-indigo-500 transition">
+              <option value="ALL">All Status</option>
+              <option value="SOLVED">✅ Solved Only</option>
+              <option value="UNSOLVED">⏳ Unsolved Only</option>
+              <option value="BOOKMARKED">⭐ Bookmarked</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Table Container -->
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="border-b border-gray-800 bg-gray-800/40 text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+              <th class="py-3 px-4 w-12 text-center">Done</th>
+              <th class="py-3 px-2 w-10 text-center">⭐</th>
+              <th class="py-3 px-4 w-28 cursor-pointer select-none hover:text-white" id="thDate">
+                <div class="flex items-center gap-1">
+                  <span>Date</span>
+                  <i data-lucide="arrow-down-up" class="w-3 h-3 text-gray-500"></i>
+                </div>
+              </th>
+              <th class="py-3 px-4">Problem Title & Link</th>
+              <th class="py-3 px-4 w-32 cursor-pointer select-none hover:text-white" id="thDiff">
+                <div class="flex items-center gap-1">
+                  <span>Difficulty</span>
+                  <i data-lucide="arrow-down-up" class="w-3 h-3 text-gray-500"></i>
+                </div>
+              </th>
+              <th class="py-3 px-4 w-40">Topic</th>
+              <th class="py-3 px-4 w-32">Source</th>
+            </tr>
+          </thead>
+          <tbody id="problemsTableBody" class="divide-y divide-gray-800/60 font-sans">
+            <!-- Dynamic rows injected here -->
+          </tbody>
+        </table>
+
+        <!-- Empty State -->
+        <div id="tableEmptyState" class="hidden py-16 text-center">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-gray-800/80 border border-gray-700 flex items-center justify-center text-gray-400 mb-3">
+            <i data-lucide="inbox" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-sm font-semibold text-gray-300">No matching problems found</h3>
+          <p class="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
+            Try adjusting your search terms or filters.
+          </p>
+        </div>
+
+        <!-- Loading State Skeleton -->
+        <div id="tableLoadingState" class="py-16 text-center">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-2 border-indigo-500 border-t-transparent"></div>
+          <p class="text-xs text-gray-400 mt-3 font-mono">Loading data from Firestore...</p>
+        </div>
+
+      </div>
+
+      <!-- Pagination / Footer Bar -->
+      <div class="p-4 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+        <div class="flex items-center gap-2">
+          <span>Rows per page:</span>
+          <select id="selectPageSize" class="px-2 py-1 rounded-lg bg-gray-800 border border-gray-700 text-gray-300 focus:outline-none">
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="60">60</option>
+            <option value="ALL">All</option>
+          </select>
+        </div>
+
+        <!-- Page Controls -->
+        <div class="flex items-center gap-3">
+          <span id="pageInfoText" class="font-mono">Page 1 of 1</span>
+          <div class="flex items-center gap-1">
+            <button id="btnPrevPage" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 disabled:opacity-40 disabled:hover:bg-gray-800 border border-gray-700 text-gray-300 transition">
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <button id="btnNextPage" class="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 disabled:opacity-40 disabled:hover:bg-gray-800 border border-gray-700 text-gray-300 transition">
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Modular Application Entrypoint -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

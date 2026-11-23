@@ -235,10 +235,15 @@ def send_email(
     if not recipient or not recipient.strip():
         logger.error("Failed to send email: recipient address is empty.")
         return False
+    recipient = recipient.strip().replace("\ufeff", "")
 
     if not actual_sender or not actual_sender.strip():
         logger.error("Failed to send email: sender email is not configured.")
         return False
+    actual_sender = actual_sender.strip().replace("\ufeff", "")
+
+    if actual_password:
+        actual_password = str(actual_password).strip().replace("\ufeff", "")
 
     if actual_server.lower() == "smtp.gmail.com" and actual_password:
         gmail_app_password = "".join(actual_password.split())

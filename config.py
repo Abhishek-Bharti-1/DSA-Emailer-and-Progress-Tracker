@@ -24,16 +24,22 @@ except ImportError:
         except Exception:
             pass
 
+def _clean_env(val: str, default: str = "") -> str:
+    v = os.getenv(val, default)
+    if v is None:
+        return default
+    return str(v).strip().replace("\ufeff", "")
+
 # ── Gemini AI ──────────────────────────────────────────
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+GEMINI_API_KEY = _clean_env("GEMINI_API_KEY", "")
+GEMINI_MODEL = _clean_env("GEMINI_MODEL", "gemini-2.5-flash")
 
 # ── Email / SMTP ──────────────────────────────────────
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SENDER_EMAIL = os.getenv("SENDER_EMAIL", "")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD", "")
-RECIPIENT_EMAIL = os.getenv("RECIPIENT_EMAIL", "")
+SMTP_SERVER = _clean_env("SMTP_SERVER", "smtp.gmail.com")
+SMTP_PORT = int(_clean_env("SMTP_PORT", "587"))
+SENDER_EMAIL = _clean_env("SENDER_EMAIL", "")
+SENDER_PASSWORD = _clean_env("SENDER_PASSWORD", "")
+RECIPIENT_EMAIL = _clean_env("RECIPIENT_EMAIL", "")
 
 # ── Paths ─────────────────────────────────────────────
 BASE_DIR = pathlib.Path(__file__).parent

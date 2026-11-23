@@ -50,7 +50,17 @@ class StateManager:
     """
     Manages persistent state: sent problems log, progress tracking, and problem cache.
     Thread-safe and uses atomic writes to prevent file corruption.
+    Automatically switches to FirestoreStateManager when USE_FIRESTORE=true.
     """
+
+    def __new__(cls, *args, **kwargs):
+        if os.environ.get("USE_FIRESTORE", "").strip().lower() in ("true", "1", "yes"):
+            try:
+                from src.cloud_state import FirestoreStateManager
+                return FirestoreStateManager()
+            except Exception as e:
+                logger.warning("Failed to initialize FirestoreStateManager: %s; falling back to local file state", e)
+        return super().__new__(cls)
 
     def __init__(
         self,
