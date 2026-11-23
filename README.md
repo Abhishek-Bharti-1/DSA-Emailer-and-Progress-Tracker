@@ -1,6 +1,8 @@
-# 🧩 DSA Problems Daily Emailer
+# 🧩 DSA Problems Daily Emailer & Progress Tracker
 
-An automated, AI-curated system that emails 4 Data Structures & Algorithms (DSA) problems to your inbox every single morning. Sourced primarily from **Striver's A2Z DSA Sheet** and supplemented by **LeetCode**, **Codeforces**, and **GeeksforGeeks**, it ensures disciplined, structured practice with zero spoilers and guaranteed non-repetition.
+An automated, AI-curated system that emails 4 Data Structures & Algorithms (DSA) problems to your inbox every single morning, accompanied by a **live GitHub Pages Dashboard** to monitor your stats, consistency streaks, and full history of dispatched problems.
+
+Sourced primarily from **Striver's A2Z DSA Sheet** and supplemented by **LeetCode**, **Codeforces**, and **GeeksforGeeks**, it ensures disciplined, structured practice with zero spoilers and guaranteed non-repetition.
 
 ---
 
@@ -10,9 +12,10 @@ An automated, AI-curated system that emails 4 Data Structures & Algorithms (DSA)
 - **Strict Topic Diversity**: All 4 problems are guaranteed to come from different topics (e.g., Arrays, Dynamic Programming, Trees, Binary Search).
 - **Mystery Format (Zero Spoilers)**: Daily emails deliberately hide difficulty, topic tags, and platform names. You solve each problem purely on merit, mirroring real interview environments.
 - **A2Z Sheet Priority**: Focuses on Striver's comprehensive A2Z DSA course (~455 problems). Automatically supplements from fallback sources (LeetCode, GFG, Codeforces) when needed.
+- **🌐 Live GitHub Pages Dashboard**: Hosted dark-mode web dashboard reading directly from Google Cloud Firestore (or local JSON fallback) in real-time. Includes difficulty distribution charts, topic coverage bars, live search, multi-filter queries, and personal progress tracking (mark solved / bookmark for revision).
 - **Weekly Progress Reports**: Automated Sunday progress digest summarizing problems solved, difficulty distributions with visual progress bars, streak metrics, and personalized coaching insights powered by Gemini.
 - **Gemini AI Agent**: Driven by Google's `gemini-2.5-flash` with native Function Calling (`google-genai` SDK) to orchestrate curation, delivery, and logging — backed by an automatic, zero-dependency Python fallback if the API is ever unreachable.
-- **No Repeated Problems Ever**: Persistent state management tracks every problem ever sent across all platforms via canonical URL slugs and normalized titles.
+- **No Repeated Problems Ever**: Persistent state management tracks every problem ever sent across all platforms via canonical URL slugs, normalized titles, and Firestore atomic transactions.
 
 ---
 
@@ -40,28 +43,42 @@ An automated, AI-curated system that emails 4 Data Structures & Algorithms (DSA)
                                   └──────────────┬──────────────┘
                                                  │
                                                  ▼
-┌───────────────────────┐         ┌─────────────────────────────┐
-│  GitHub Actions / CLI │ ──────> │   Gemini AI Agent / Router  │
-│  (Cron: 8:00 AM IST)  │         │   (Function Calling Loop)   │
-└───────────────────────┘         └──────────────┬──────────────┘
+┌─────────────────────────────────┐   ┌─────────────────────────┐
+│ Cloud Run / GitHub Actions / CLI│──>│ Gemini AI Agent / Router│
+│ (Cron: 8:00 AM IST Daily)       │   │ (Function Calling Loop) │
+└─────────────────────────────────┘   └──────────┬──────────────┘
                                                  │
                                                  ▼
-                                  ┌─────────────────────────────┐
-                                  │   Intelligent Selector      │
-                                  │   (1E, 2M, 1H + 4 Topics)   │
-                                  └──────────────┬──────────────┘
+                                      ┌─────────────────────────┐
+                                      │  Intelligent Selector   │
+                                      │ (1E, 2M, 1H + 4 Topics) │
+                                      └──────────┬──────────────┘
                                                  │
                                                  ▼
-                                  ┌─────────────────────────────┐
-                                  │ Responsive HTML Mailer      │
-                                  │ (STARTTLS via Gmail SMTP)   │
-                                  └──────────────┬──────────────┘
+                                      ┌─────────────────────────┐
+                                      │ Responsive HTML Mailer  │
+                                      │(STARTTLS via Gmail SMTP)│
+                                      └──────────┬──────────────┘
                                                  │
                                                  ▼
+                      ┌─────────────────────────────────────────────────────┐
+                      │                 Persistent State                    │
+                      ├──────────────────────────┬──────────────────────────┤
+                      │ Cloud Firestore          │ Local Git Storage        │
+                      │ • sent_problems          │ • data/sent_log.json     │
+                      │ • state/progress         │ • data/progress.json     │
+                      └────────────┬─────────────┴─────────────┬────────────┘
+                                   │                           │
+                                   └─────────────┬─────────────┘
+                                                 │ (Direct real-time fetch)
+                                                 ▼
                                   ┌─────────────────────────────┐
-                                  │  State Updates & Commits    │
-                                  │  • sent_log.json            │
-                                  │  • progress.json            │
+                                  │   GitHub Pages Dashboard    │
+                                  │          (/docs)            │
+                                  │ • Live Streak & Analytics   │
+                                  │ • Difficulty & Topic Charts │
+                                  │ • Filterable Question Table │
+                                  │ • Solved & Bookmark Tracker │
                                   └─────────────────────────────┘
 ```
 
@@ -70,17 +87,103 @@ An automated, AI-curated system that emails 4 Data Structures & Algorithms (DSA)
 2. **Deduplicate**: Cross-platform duplicates are eliminated by matching URL slugs and normalized titles, retaining the highest-priority source version (`a2z_sheet` > `leetcode` > `gfg` > `codeforces`).
 3. **Select**: The selector filters out previously sent problem IDs, prioritizes A2Z Sheet candidates, and runs depth-first backtracking to pick 1 Easy, 2 Medium, and 1 Hard problem from 4 distinct topics.
 4. **Dispatch**: The email builder renders a mobile-responsive dark navy template and sends it via Gmail SMTP with a plain-text fallback.
-5. **Persist**: The sent problems are atomically logged, streaks and progress metrics are recalculated, and state files are committed back to the repository.
+5. **Persist**: The sent problems are atomically logged, streaks and progress metrics are recalculated in Firestore (or local state files), and synced to the live dashboard.
 
 ---
 
-## 🚀 Setup
+## 🌐 Live GitHub Pages Dashboard
+
+The repository includes a modern, client-side dashboard hosted completely free on **GitHub Pages** (inside the `/docs` folder). It connects directly to your Google Cloud Firestore database in real-time, requiring zero backend servers or changes to your Cloud Run deployment.
+
+### 🌟 Dashboard Features
+- **🔥 Current Streak & Consistency**: Tracks consecutive daily problem deliveries.
+- **📊 Interactive Visualizations**:
+  - **Difficulty Donut Chart**: Proportional breakdown of Easy, Medium, and Hard problems.
+  - **Topic Coverage Bar Chart**: Frequency graph of all algorithmic topics covered to date.
+- **🎯 Striver's A2Z Sheet Progress**: Visual progress bar tracking overall completion ($X / 455$).
+- **📋 Searchable & Filterable Directory**:
+  - Live search by problem title, topic, or problem ID.
+  - Filter by difficulty (`Easy`, `Medium`, `Hard`).
+  - Filter by topic (`Arrays`, `DP`, `Graphs`, `Trees`, etc.).
+  - Filter by status (`All`, `Solved`, `Unsolved`, `Bookmarked`).
+  - Sort by Date (newest/oldest) and Difficulty (Easy $\to$ Hard or Hard $\to$ Easy).
+  - External links opening the problem directly on LeetCode, GFG, Codeforces, or TakeUforward.
+- **✅ Personal Solving & Bookmark Tracker**:
+  - Mark problems as completed with a single click (persisted in browser `localStorage`).
+  - Bookmark challenging questions with ⭐ for future revision.
+- **🛡️ Graceful Offline Fallback**: If Firestore is unreachable, the dashboard automatically loads bundled local JSON datasets.
+
+### 📁 Modular Architecture (`docs/`)
+The dashboard is built with vanilla ES modules, Tailwind CSS, Chart.js, and Lucide icons following clean software engineering principles:
+
+```
+docs/
+├── index.html            # Semantic dark-mode Single Page Application
+├── data/                 # Offline / fallback JSON snapshots
+│   ├── progress.json
+│   └── sent_log.json
+└── js/
+    ├── config.js         # Central configuration (Project ID, collection paths, themes)
+    ├── firebase.js       # Dedicated Firestore service: queries, normalization & error handling
+    ├── storage.js        # LocalStorage service for solved IDs, bookmarks & preferences
+    ├── charts.js         # Chart.js lifecycle management (donut & bar charts)
+    ├── render.js         # View layer: DOM updates, HTML sanitization, badge rendering
+    └── app.js            # Main controller: wires events, debounced search & state sync
+```
+
+### 🚀 Deploying the Dashboard to GitHub Pages
+
+#### 1. Set Your Google Cloud Project ID
+Open [`docs/js/config.js`](docs/js/config.js) and enter your project ID:
+```javascript
+export const CONFIG = {
+  firebase: {
+    projectId: "your-gcp-project-id", // <-- Replace with your Google Cloud project ID
+    apiKey: "",                       // Optional
+    databaseId: "(default)",
+  },
+  // ...
+};
+```
+
+#### 2. Ensure Firestore Rules Allow Public Read Access
+In your Google Cloud Console or Firebase Console, ensure your Firestore Security Rules grant read-only access to `sent_problems` and `state/progress` (write operations remain strictly blocked to public users and reserved for your Cloud Run IAM service account):
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /sent_problems/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /state/progress {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
+```
+
+#### 3. Enable GitHub Pages
+1. Push your repository to GitHub (`git add docs/ && git commit -m "feat: dashboard" && git push`).
+2. In your GitHub repository, navigate to **Settings** → **Pages**.
+3. Under **Build and deployment**:
+   - **Source**: `Deploy from a branch`
+   - **Branch**: `main`
+   - **Folder**: `/docs`
+4. Click **Save**. Your dashboard will be live at:
+   `https://<your-username>.github.io/<repo-name>/`
+
+---
+
+## 🚀 Setup & Installation
 
 ### Prerequisites
 - Python 3.10+
 - Gmail account with an App Password
 - Google Gemini API key (free tier available)
-- GitHub account (for automated scheduling with GitHub Actions)
+- GitHub account (for GitHub Actions) or Google Cloud project (for Cloud Run + Firestore)
 
 ---
 
@@ -143,24 +246,30 @@ python -m src.main daily
 
 ---
 
-### Step 5: Deploy to GitHub Actions
+### Step 5: Automation Options
 
-Automate daily delivery using the built-in GitHub Actions workflow:
+#### Option A: Serverless Google Cloud Run (Recommended for Cloud Setup)
+Deploy the service using the automated deployment scripts:
+- **Windows (PowerShell)**: `.\deploy.ps1`
+- **Linux / macOS**: `./deploy.sh`
 
+This script sets up:
+1. Google Cloud Firestore database.
+2. Google Cloud Secret Manager for credentials.
+3. Google Cloud Run service with authenticated invoker accounts.
+4. Google Cloud Scheduler jobs for daily delivery (8:00 AM IST) and weekly reports (Sunday 9:00 AM IST).
+
+#### Option B: GitHub Actions Cron
+If you prefer running via GitHub Actions:
 1. Push your repository to GitHub:
    ```bash
    git add .
    git commit -m "Initial setup"
    git push origin main
    ```
-2. Navigate to your repository on GitHub: **Settings** → **Secrets and variables** → **Actions**.
-3. Click **New repository secret** and add each secret:
-   - `GEMINI_API_KEY`
-   - `SENDER_EMAIL`
-   - `SENDER_PASSWORD`
-   - `RECIPIENT_EMAIL`
-4. Go to **Settings** → **Actions** → **General** → **Workflow permissions**, select **Read and write permissions**, and click **Save** (required for the workflow to commit updated state files).
-5. Switch to the **Actions** tab, select **Daily DSA Email**, and click **Run workflow** to test manual triggering.
+2. Navigate to **Settings** → **Secrets and variables** → **Actions**.
+3. Add secrets: `GEMINI_API_KEY`, `SENDER_EMAIL`, `SENDER_PASSWORD`, `RECIPIENT_EMAIL`.
+4. Under **Settings** → **Actions** → **General** → **Workflow permissions**, select **Read and write permissions**.
 
 ---
 
@@ -202,13 +311,26 @@ Automate daily delivery using the built-in GitHub Actions workflow:
 DSA-Problems-Emailer/
 ├── .github/
 │   └── workflows/
-│       └── daily_email.yml      # GitHub Actions cron schedule (8:00 AM IST daily)
+│       ├── daily_email.yml      # Daily delivery cron workflow (8:00 AM IST)
+│       └── weekly_report.yml    # Weekly summary report workflow (Sunday 6:00 PM IST)
 ├── data/
 │   ├── a2z_fallback.json        # Curated offline dataset for Striver's A2Z Sheet
 │   ├── gfg_problems.json        # Curated offline dataset for GeeksforGeeks problems
 │   ├── problem_cache.json       # Master deduplicated problem pool across all sources
 │   ├── progress.json            # Cumulative statistics, streak counter, topic metrics
 │   └── sent_log.json            # Complete history of every problem ever dispatched
+├── docs/                        # 🌐 GitHub Pages Live Dashboard
+│   ├── index.html               # Single-page dashboard UI (Tailwind + Lucide + Chart.js)
+│   ├── data/                    # Local JSON fallback data
+│   │   ├── progress.json
+│   │   └── sent_log.json
+│   └── js/
+│       ├── config.js            # GCP Project ID, Firestore paths, themes
+│       ├── firebase.js          # Firestore client service
+│       ├── storage.js           # LocalStorage solver & bookmark state manager
+│       ├── charts.js            # Chart.js visualization service
+│       ├── render.js            # DOM presentation and badge rendering service
+│       └── app.js               # Application coordinator & event dispatcher
 ├── src/
 │   ├── fetchers/
 │   │   ├── __init__.py          # Exports problem fetcher routines
@@ -218,13 +340,16 @@ DSA-Problems-Emailer/
 │   │   └── leetcode_fetcher.py  # Paginates LeetCode public GraphQL API
 │   ├── __init__.py
 │   ├── agent.py                 # Gemini AI orchestrator with native function calling
+│   ├── cloud_state.py           # Google Cloud Firestore persistent state manager
 │   ├── email_builder.py         # Responsive dark-theme HTML email generator
 │   ├── mailer.py                # SMTP client with STARTTLS and plain-text fallback
 │   ├── main.py                  # CLI entry point and argument parsing
 │   ├── selector.py              # Difficulty quota and topic diversity selector
-│   └── state.py                 # Thread-safe atomic JSON state manager
-├── .env.example                 # Template for environment configuration
-├── .gitignore                   # Ignores .env and virtual environments (tracks data/)
+│   └── state.py                 # Automatic state manager (Firestore or local JSON)
+├── app.py                       # FastAPI Cloud Run entry point for scheduled HTTP triggers
+├── deploy.ps1                   # Automated GCP deployment script (PowerShell)
+├── deploy.sh                    # Automated GCP deployment script (Bash)
+├── Dockerfile                   # Container definition for Google Cloud Run
 ├── config.py                    # Global constants, paths, quotas, and topic mappings
 ├── README.md                    # Project documentation
 └── requirements.txt             # Python package dependencies
@@ -232,72 +357,13 @@ DSA-Problems-Emailer/
 
 ---
 
-## 🔄 Adding Problems Manually
-
-You can add or curate custom problems by editing the local fallback files in `data/`.
-
-### Editing `data/gfg_problems.json` and `data/a2z_fallback.json`
-Entries must follow the unified JSON problem schema:
-
-```json
-[
-  {
-    "id": "gfg-0101",
-    "title": "Subarray with Given Sum",
-    "topic": "Arrays",
-    "difficulty": "Medium",
-    "source": "gfg",
-    "url": "https://www.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1",
-    "platform": "gfg"
-  },
-  {
-    "id": "a2z-0500",
-    "title": "Alien Dictionary",
-    "topic": "Graphs",
-    "difficulty": "Hard",
-    "source": "a2z_sheet",
-    "url": "https://leetcode.com/problems/alien-dictionary/",
-    "platform": "leetcode"
-  }
-]
-```
-
-### Guidelines for Manual Entries:
-1. **Topic Normalization**: Use one of the 19 standard topics:
-   *Arrays, Strings, Linked Lists, Stacks & Queues, Trees, Binary Search Trees, Binary Search, Graphs, Dynamic Programming, Greedy, Backtracking, Bit Manipulation, Math, Heaps, Tries, Sliding Window, Two Pointers, Recursion, Sorting*.
-2. **Difficulty**: Must be `Easy`, `Medium`, or `Hard` (GFG `School` and `Basic` levels automatically map to `Easy`).
-3. **Unique IDs**: Use prefix conventions like `gfg-NNNN` or `a2z-NNNN`.
-4. **Re-caching**: After modifying either file, run `python -m src.main refresh` to re-index the cache.
-
----
-
-## ⚙️ Configuration
-
-Environment variables can be defined in `.env` (for local runs) or GitHub Repository Secrets (for automated runs):
-
-| Variable | Default | Description |
-|---|---|---|
-| `GEMINI_API_KEY` | *(Required for AI)* | Google Gemini API key used by the curator agent and weekly insights. |
-| `SMTP_SERVER` | `smtp.gmail.com` | Hostname of your outgoing mail server. |
-| `SMTP_PORT` | `587` | Port for SMTP communication with STARTTLS encryption. |
-| `SENDER_EMAIL` | *(Required)* | Gmail address used to transmit the practice emails. |
-| `SENDER_PASSWORD` | *(Required)* | 16-character Google App Password (not your Google account password). |
-| `RECIPIENT_EMAIL` | *(Required)* | Email address where daily practice and reports will be delivered. |
-
-### Configurable Constants (`config.py`)
-- `DAILY_EASY = 1`, `DAILY_MEDIUM = 2`, `DAILY_HARD = 1`: Customizes the daily difficulty quota.
-- `SOURCE_PRIORITY = ["a2z_sheet", "leetcode", "gfg", "codeforces"]`: Order of priority when selecting problems.
-- `GEMINI_MODEL = "gemini-2.5-flash"`: Fast, high-performance Gemini model used for agent orchestration and insights (overridable via `GEMINI_MODEL` env var).
-
----
-
 ## 🤖 How the AI Agent Works
 
-The system utilizes Google's `google-genai` SDK with **Gemini Function Calling** to autonomously orchestrate problem curation.
+The system utilizes Google's `google-genai` SDK with **Gemini Function Calling** (`gemini-2.5-flash`) to autonomously orchestrate problem curation.
 
 ```
        ┌────────────────────────────────────────────────────────┐
-       │                   Gemini 2.0 Flash                     │
+       │                   Gemini 2.5 Flash                     │
        └──────────────────────────┬─────────────────────────────┘
                                   │
                   Function Calls  │  Tool Outputs
@@ -318,44 +384,6 @@ The system utilizes Google's `google-genai` SDK with **Gemini Function Calling**
 
 ---
 
-## 📊 State Files
-
-All state files reside in the `data/` directory and are managed by `StateManager` using thread-safe, atomic disk writes (`tempfile` + `os.replace`):
-
-- **`data/sent_log.json`**:
-  An append-only log of every problem sent. Each record contains:
-  ```json
-  {
-    "id": "a2z-0012",
-    "title": "Next Permutation",
-    "topic": "Arrays",
-    "difficulty": "Medium",
-    "source": "a2z_sheet",
-    "date": "2026-11-21"
-  }
-  ```
-- **`data/problem_cache.json`**:
-  Stores all available, deduplicated problems from all 4 sources.
-- **`data/progress.json`**:
-  Maintains aggregated stats updated after each dispatch:
-  ```json
-  {
-    "total_sent": 28,
-    "by_source": { "a2z_sheet": 24, "leetcode": 4 },
-    "by_topic": { "Arrays": 7, "Trees": 7, "Graphs": 7, "Dynamic Programming": 7 },
-    "by_difficulty": { "Easy": 7, "Medium": 14, "Hard": 7 },
-    "streak_days": 7,
-    "a2z_total": 455,
-    "a2z_sent": 24,
-    "dates": ["2026-11-15", "2026-11-16", "2026-11-17", "2026-11-18", "2026-11-19", "2026-11-20", "2026-11-21"]
-  }
-  ```
-
-> [!NOTE]
-> `data/sent_log.json` and `data/progress.json` are intentionally tracked in Git so that GitHub Actions can persist and commit state across daily runs.
-
----
-
 ## 🛠️ Troubleshooting
 
 ### 1. `SMTPAuthenticationError` (535 5.7.8 Username and Password not accepted)
@@ -370,12 +398,9 @@ All state files reside in the `data/` directory and are managed by `StateManager
 - **Behavior**: The application logs a warning and automatically switches to `run_daily_fallback()`.
 - **Verification**: Check your Gemini API key and quota in [Google AI Studio](https://aistudio.google.com/). Ensure `GEMINI_API_KEY` is correctly set in `.env` or repository secrets.
 
-### 4. Problem Cache is Empty
-- **Symptom**: `Failed to select daily problems from pool.`
-- **Fix**: Run `python -m src.main refresh` to re-fetch problems from online sources, or verify that `data/a2z_fallback.json` exists.
-
-### 5. Email Arriving in Spam / Junk Folder
-- **Fix**: Open the email in your email client, click **Report not spam** or add your sender address to your contacts / VIP list.
+### 4. Dashboard Displays "Using Local Data"
+- **Cause**: The Google Cloud Project ID in [`docs/js/config.js`](docs/js/config.js) is either unset or the Firestore security rules deny public reads.
+- **Fix**: Update `projectId` in `docs/js/config.js` and verify that Firestore security rules contain `allow read: if true;` for `sent_problems` and `state/progress`.
 
 ---
 
