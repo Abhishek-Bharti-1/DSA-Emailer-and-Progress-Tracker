@@ -62,5 +62,37 @@
     "difficulty": "Hard",
     "source": "leetcode",
     "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0078",
+    "title": "Linear Search",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0422",
+    "title": "Subset sum equals to target",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0151",
+    "title": "Count Number of Substrings",
+    "topic": "Strings",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-381",
+    "title": "Insert Delete GetRandom O(1) - Duplicates allowed",
+    "topic": "Math",
+    "difficulty": "Hard",
+    "source": "leetcode",
+    "date": "2026-11-23"
   }
 ]
