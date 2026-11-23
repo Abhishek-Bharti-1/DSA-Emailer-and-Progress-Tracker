@@ -30,5 +30,133 @@
     "difficulty": "Hard",
     "source": "leetcode",
     "date": "2026-11-22"
+  },
+  {
+    "id": "a2z-0012",
+    "title": "Pattern 5",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0410",
+    "title": "Grid unique paths",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0274",
+    "title": "Next Greater Element",
+    "topic": "Stacks & Queues",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-2366",
+    "title": "Minimum Replacements to Sort the Array",
+    "topic": "Greedy",
+    "difficulty": "Hard",
+    "source": "leetcode",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0014",
+    "title": "Pattern 7",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0439",
+    "title": "Longest common subsequence",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0151",
+    "title": "Count Number of Substrings",
+    "topic": "Strings",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-2163",
+    "title": "Minimum Difference in Sums After Removal of Elements",
+    "topic": "Heaps",
+    "difficulty": "Hard",
+    "source": "leetcode",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0185",
+    "title": "Find the length of the Linked List",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0422",
+    "title": "Subset sum equals to target",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-1557",
+    "title": "Minimum Number of Vertices to Reach All Nodes",
+    "topic": "Graphs",
+    "difficulty": "Medium",
+    "source": "leetcode",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-2382",
+    "title": "Maximum Segment Sum After Removals",
+    "topic": "Binary Search Trees",
+    "difficulty": "Hard",
+    "source": "leetcode",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0292",
+    "title": "Inorder Traversal",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-2513",
+    "title": "Minimize the Maximum of Two Arrays",
+    "topic": "Binary Search",
+    "difficulty": "Medium",
+    "source": "leetcode",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-2606",
+    "title": "Find the Substring With Maximum Cost",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "leetcode",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-2508",
+    "title": "Add Edges to Make Degrees of All Nodes Even",
+    "topic": "Graphs",
+    "difficulty": "Hard",
+    "source": "leetcode",
+    "date": "2026-11-23"
   }
 ]

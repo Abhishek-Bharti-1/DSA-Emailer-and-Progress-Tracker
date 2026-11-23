@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Union
 
@@ -311,6 +312,21 @@ TOOL_MAP: dict[str, Any] = {
 }
 
 
+def _get_candidate_models() -> list[str]:
+    """Return ordered list of Gemini models to try, starting with config/env."""
+    primary = getattr(config, "GEMINI_MODEL", "") or os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+    candidates = [primary]
+    all_known_models = [
+        "gemini-3.6-flash",
+        "gemini-3.5-flash",
+        "gemini-3.1-pro-preview",
+    ]
+    for m in all_known_models:
+        if m not in candidates:
+            candidates.append(m)
+    return candidates
+
+
 def _generate_ai_weekly_insights(stats: dict[str, Any]) -> str:
     """Generate concise AI coaching insights for the weekly report using Gemini."""
     default_insights = (
@@ -325,7 +341,6 @@ def _generate_ai_weekly_insights(stats: dict[str, Any]) -> str:
 
     try:
         client = genai.Client(api_key=api_key)
-        model_name = getattr(config, "GEMINI_MODEL", "gemini-2.0-flash")
         prompt = (
             f"You are an encouraging and strategic DSA mentor reviewing a student's weekly progress.\n"
             f"Here are their statistics for the week:\n{json.dumps(stats, indent=2)}\n\n"
@@ -333,15 +348,20 @@ def _generate_ai_weekly_insights(stats: dict[str, Any]) -> str:
             f"topics covered, streak, and recommended areas of focus for next week. "
             f"Use markdown bolding like **Key Takeaway**."
         )
-        response = client.models.generate_content(
-            model=model_name,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.3,
-            ) if types is not None else None,
-        )
-        if response and response.text:
-            return response.text.strip()
+        for model_name in _get_candidate_models():
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        temperature=0.3,
+                    ) if types is not None else None,
+                )
+                if response and response.text:
+                    return response.text.strip()
+            except Exception as exc:
+                logger.warning("Gemini model %s failed for insights: %s", model_name, exc)
+                continue
     except Exception as exc:
         logger.warning("Failed to generate Gemini AI insights: %s; using default.", exc)
 
@@ -371,7 +391,7 @@ def run_daily_agent() -> bool:
     try:
         # 1. Set up Gemini client with function calling tools
         client = genai.Client(api_key=api_key)
-        model_name = getattr(config, "GEMINI_MODEL", "gemini-2.0-flash")
+        candidate_models = _get_candidate_models()
 
         # 2. System prompt
         system_prompt = (
@@ -391,93 +411,123 @@ def run_daily_agent() -> bool:
             tool_log_sent,
         ]
 
-        contents: list[Any] = [
-            types.Content(
-                role="user",
-                parts=[types.Part.from_text(text=system_prompt)],
-            )
-        ]
-
-        # 3. Run the agentic loop (while response has function_calls, execute and feed back)
-        max_iterations = 10
-        iteration = 0
-
-        while iteration < max_iterations:
-            iteration += 1
-            logger.info("Daily agent turn %d executing...", iteration)
-
-            response = client.models.generate_content(
-                model=model_name,
-                contents=contents,
-                config=types.GenerateContentConfig(
-                    tools=daily_tools,
-                    temperature=0.2,
-                ),
-            )
-
-            function_calls = getattr(response, "function_calls", None)
-            if not function_calls:
-                logger.info(
-                    "Daily agent loop ended without function calls. Output: %s",
-                    getattr(response, "text", ""),
+        for model_name in candidate_models:
+            logger.info("Attempting daily agent with model: %s", model_name)
+            contents: list[Any] = [
+                types.Content(
+                    role="user",
+                    parts=[types.Part.from_text(text=system_prompt)],
                 )
-                break
+            ]
 
-            # Append model's response candidate content to history
-            if response.candidates and response.candidates[0].content:
-                contents.append(response.candidates[0].content)
+            # 3. Run the agentic loop (while response has function_calls, execute and feed back)
+            max_iterations = 10
+            iteration = 0
+            model_failed = False
 
-            # Handle multiple function calls per response
-            func_response_parts: list[Any] = []
-            for call in function_calls:
-                call_name = getattr(call, "name", "")
-                raw_args = getattr(call, "args", {})
-                call_args = dict(raw_args) if raw_args else {}
+            while iteration < max_iterations:
+                iteration += 1
+                logger.info("Daily agent turn %d executing (model: %s)...", iteration, model_name)
 
-                logger.info("Executing function call '%s' with args %s", call_name, call_args)
-
-                tool_fn = TOOL_MAP.get(call_name)
-                if tool_fn is None:
-                    tool_result = f"Error: Tool '{call_name}' is not recognized."
-                    logger.error(tool_result)
-                else:
+                max_turn_retries = 2
+                response = None
+                for attempt in range(max_turn_retries + 1):
                     try:
-                        sig = inspect.signature(tool_fn)
-                        filtered_args = {}
-                        for p in sig.parameters.values():
-                            if p.name in call_args:
-                                filtered_args[p.name] = call_args[p.name]
-                            elif p.name == "problems_json" and "problems" in call_args:
-                                filtered_args["problems_json"] = call_args["problems"]
-                            elif p.name == "source" and "source" not in call_args:
-                                filtered_args["source"] = "a2z_sheet"
-
-                        tool_result = tool_fn(**filtered_args)
+                        config_kwargs: dict[str, Any] = {"tools": daily_tools, "temperature": 0.2}
+                        if hasattr(types, "AutomaticFunctionCallingConfig"):
+                            config_kwargs["automatic_function_calling"] = types.AutomaticFunctionCallingConfig(disable=True)
+                        response = client.models.generate_content(
+                            model=model_name,
+                            contents=contents,
+                            config=types.GenerateContentConfig(**config_kwargs),
+                        )
+                        break
                     except Exception as exc:
-                        logger.error("Exception in tool %s: %s", call_name, exc, exc_info=True)
-                        tool_result = f"Error: Tool '{call_name}' raised exception: {exc}"
+                        exc_str = str(exc)
+                        if any(err in exc_str for err in ("503", "UNAVAILABLE", "high demand", "429", "RESOURCE_EXHAUSTED")):
+                            if attempt < max_turn_retries:
+                                wait_sec = 4 * (attempt + 1)
+                                logger.warning(
+                                    "Model %s transient error (%s). Retrying in %ds (attempt %d/%d)...",
+                                    model_name, exc, wait_sec, attempt + 1, max_turn_retries,
+                                )
+                                time.sleep(wait_sec)
+                                continue
+                        if any(err in exc_str for err in ("404", "NOT_FOUND", "503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "high demand")):
+                            logger.warning("Model %s unavailable/overloaded (%s). Trying next candidate model...", model_name, exc)
+                            model_failed = True
+                            break
+                        raise
 
-                func_response_parts.append(
-                    types.Part.from_function_response(
-                        name=call_name,
-                        response={"result": str(tool_result)},
+                if model_failed or response is None:
+                    break
+
+                function_calls = getattr(response, "function_calls", None)
+                if not function_calls:
+                    logger.info(
+                        "Daily agent loop ended without function calls. Output: %s",
+                        getattr(response, "text", ""),
+                    )
+                    break
+
+                # Append model's response candidate content to history
+                if response.candidates and response.candidates[0].content:
+                    contents.append(response.candidates[0].content)
+
+                # Handle multiple function calls per response
+                func_response_parts: list[Any] = []
+                for call in function_calls:
+                    call_name = getattr(call, "name", "")
+                    raw_args = getattr(call, "args", {})
+                    call_args = dict(raw_args) if raw_args else {}
+
+                    logger.info("Executing function call '%s' with args %s", call_name, call_args)
+
+                    tool_fn = TOOL_MAP.get(call_name)
+                    if tool_fn is None:
+                        tool_result = f"Error: Tool '{call_name}' is not recognized."
+                        logger.error(tool_result)
+                    else:
+                        try:
+                            sig = inspect.signature(tool_fn)
+                            filtered_args = {}
+                            for p in sig.parameters.values():
+                                if p.name in call_args:
+                                    filtered_args[p.name] = call_args[p.name]
+                                elif p.name == "problems_json" and "problems" in call_args:
+                                    filtered_args["problems_json"] = call_args["problems"]
+                                elif p.name == "source" and "source" not in call_args:
+                                    filtered_args["source"] = "a2z_sheet"
+
+                            tool_result = tool_fn(**filtered_args)
+                        except Exception as exc:
+                            logger.error("Exception in tool %s: %s", call_name, exc, exc_info=True)
+                            tool_result = f"Error: Tool '{call_name}' raised exception: {exc}"
+
+                    func_response_parts.append(
+                        types.Part.from_function_response(
+                            name=call_name,
+                            response={"result": str(tool_result)},
+                        )
+                    )
+
+                # Feed function responses back to the model as user content
+                contents.append(
+                    types.Content(
+                        role="user",
+                        parts=func_response_parts,
                     )
                 )
 
-            # Feed function responses back to the model as user content
-            contents.append(
-                types.Content(
-                    role="user",
-                    parts=func_response_parts,
-                )
-            )
+            if not model_failed and _last_email_sent:
+                if not _last_logged_sent and _last_selected_problems:
+                    logger.info("Logging sent problems as safety precaution.")
+                    StateManager().mark_sent(_last_selected_problems)
+                logger.info("run_daily_agent completed successfully with model %s.", model_name)
+                return True
 
         # 4. Return success/failure
         if _last_email_sent:
-            if not _last_logged_sent and _last_selected_problems:
-                logger.info("Logging sent problems as safety precaution.")
-                StateManager().mark_sent(_last_selected_problems)
-            logger.info("run_daily_agent completed successfully.")
             return True
         else:
             logger.warning("run_daily_agent completed, but daily email was not dispatched.")
@@ -506,7 +556,7 @@ def run_weekly_agent() -> bool:
 
     try:
         client = genai.Client(api_key=api_key)
-        model_name = getattr(config, "GEMINI_MODEL", "gemini-2.0-flash")
+        candidate_models = _get_candidate_models()
 
         system_prompt = (
             "You are a DSA weekly progress reporting agent. Your job today is to:\n"
@@ -520,77 +570,107 @@ def run_weekly_agent() -> bool:
             tool_generate_weekly_report,
         ]
 
-        contents: list[Any] = [
-            types.Content(
-                role="user",
-                parts=[types.Part.from_text(text=system_prompt)],
-            )
-        ]
-
-        max_iterations = 8
-        iteration = 0
-
-        while iteration < max_iterations:
-            iteration += 1
-            logger.info("Weekly agent turn %d executing...", iteration)
-
-            response = client.models.generate_content(
-                model=model_name,
-                contents=contents,
-                config=types.GenerateContentConfig(
-                    tools=weekly_tools,
-                    temperature=0.2,
-                ),
-            )
-
-            function_calls = getattr(response, "function_calls", None)
-            if not function_calls:
-                logger.info(
-                    "Weekly agent loop ended without function calls. Output: %s",
-                    getattr(response, "text", ""),
+        for model_name in candidate_models:
+            logger.info("Attempting weekly agent with model: %s", model_name)
+            contents: list[Any] = [
+                types.Content(
+                    role="user",
+                    parts=[types.Part.from_text(text=system_prompt)],
                 )
-                break
+            ]
 
-            if response.candidates and response.candidates[0].content:
-                contents.append(response.candidates[0].content)
+            max_iterations = 8
+            iteration = 0
+            model_failed = False
 
-            func_response_parts: list[Any] = []
-            for call in function_calls:
-                call_name = getattr(call, "name", "")
-                raw_args = getattr(call, "args", {})
-                call_args = dict(raw_args) if raw_args else {}
+            while iteration < max_iterations:
+                iteration += 1
+                logger.info("Weekly agent turn %d executing (model: %s)...", iteration, model_name)
 
-                logger.info("Executing weekly function call '%s' with args %s", call_name, call_args)
-
-                tool_fn = TOOL_MAP.get(call_name)
-                if tool_fn is None:
-                    tool_result = f"Error: Tool '{call_name}' is not recognized."
-                    logger.error(tool_result)
-                else:
+                max_turn_retries = 2
+                response = None
+                for attempt in range(max_turn_retries + 1):
                     try:
-                        sig = inspect.signature(tool_fn)
-                        filtered_args = {p.name: call_args[p.name] for p in sig.parameters.values() if p.name in call_args}
-                        tool_result = tool_fn(**filtered_args)
+                        config_kwargs: dict[str, Any] = {"tools": weekly_tools, "temperature": 0.2}
+                        if hasattr(types, "AutomaticFunctionCallingConfig"):
+                            config_kwargs["automatic_function_calling"] = types.AutomaticFunctionCallingConfig(disable=True)
+                        response = client.models.generate_content(
+                            model=model_name,
+                            contents=contents,
+                            config=types.GenerateContentConfig(**config_kwargs),
+                        )
+                        break
                     except Exception as exc:
-                        logger.error("Exception in tool %s: %s", call_name, exc, exc_info=True)
-                        tool_result = f"Error: Tool '{call_name}' raised exception: {exc}"
+                        exc_str = str(exc)
+                        if any(err in exc_str for err in ("503", "UNAVAILABLE", "high demand", "429", "RESOURCE_EXHAUSTED")):
+                            if attempt < max_turn_retries:
+                                wait_sec = 4 * (attempt + 1)
+                                logger.warning(
+                                    "Model %s transient error (%s). Retrying in %ds (attempt %d/%d)...",
+                                    model_name, exc, wait_sec, attempt + 1, max_turn_retries,
+                                )
+                                time.sleep(wait_sec)
+                                continue
+                        if any(err in exc_str for err in ("404", "NOT_FOUND", "503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "high demand")):
+                            logger.warning("Model %s unavailable/overloaded (%s). Trying next candidate model...", model_name, exc)
+                            model_failed = True
+                            break
+                        raise
 
-                func_response_parts.append(
-                    types.Part.from_function_response(
-                        name=call_name,
-                        response={"result": str(tool_result)},
+                if model_failed or response is None:
+                    break
+
+                function_calls = getattr(response, "function_calls", None)
+                if not function_calls:
+                    logger.info(
+                        "Weekly agent loop ended without function calls. Output: %s",
+                        getattr(response, "text", ""),
+                    )
+                    break
+
+                if response.candidates and response.candidates[0].content:
+                    contents.append(response.candidates[0].content)
+
+                func_response_parts: list[Any] = []
+                for call in function_calls:
+                    call_name = getattr(call, "name", "")
+                    raw_args = getattr(call, "args", {})
+                    call_args = dict(raw_args) if raw_args else {}
+
+                    logger.info("Executing weekly function call '%s' with args %s", call_name, call_args)
+
+                    tool_fn = TOOL_MAP.get(call_name)
+                    if tool_fn is None:
+                        tool_result = f"Error: Tool '{call_name}' is not recognized."
+                        logger.error(tool_result)
+                    else:
+                        try:
+                            sig = inspect.signature(tool_fn)
+                            filtered_args = {p.name: call_args[p.name] for p in sig.parameters.values() if p.name in call_args}
+                            tool_result = tool_fn(**filtered_args)
+                        except Exception as exc:
+                            logger.error("Exception in tool %s: %s", call_name, exc, exc_info=True)
+                            tool_result = f"Error: Tool '{call_name}' raised exception: {exc}"
+
+                    func_response_parts.append(
+                        types.Part.from_function_response(
+                            name=call_name,
+                            response={"result": str(tool_result)},
+                        )
+                    )
+
+                contents.append(
+                    types.Content(
+                        role="user",
+                        parts=func_response_parts,
                     )
                 )
 
-            contents.append(
-                types.Content(
-                    role="user",
-                    parts=func_response_parts,
-                )
-            )
+            if not model_failed and _last_weekly_sent:
+                logger.info("run_weekly_agent completed successfully with model %s.", model_name)
+                return True
 
         if _last_weekly_sent:
-            logger.info("run_weekly_agent completed successfully.")
             return True
         else:
             logger.warning("run_weekly_agent completed, but weekly report was not dispatched.")

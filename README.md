@@ -11,7 +11,7 @@ An automated, AI-curated system that emails 4 Data Structures & Algorithms (DSA)
 - **Mystery Format (Zero Spoilers)**: Daily emails deliberately hide difficulty, topic tags, and platform names. You solve each problem purely on merit, mirroring real interview environments.
 - **A2Z Sheet Priority**: Focuses on Striver's comprehensive A2Z DSA course (~455 problems). Automatically supplements from fallback sources (LeetCode, GFG, Codeforces) when needed.
 - **Weekly Progress Reports**: Automated Sunday progress digest summarizing problems solved, difficulty distributions with visual progress bars, streak metrics, and personalized coaching insights powered by Gemini.
-- **Gemini AI Agent**: Driven by Google's `gemini-2.0-flash` with native Function Calling (`google-genai` SDK) to orchestrate curation, delivery, and logging — backed by an automatic, zero-dependency Python fallback if the API is ever unreachable.
+- **Gemini AI Agent**: Driven by Google's `gemini-2.5-flash` with native Function Calling (`google-genai` SDK) to orchestrate curation, delivery, and logging — backed by an automatic, zero-dependency Python fallback if the API is ever unreachable.
 - **No Repeated Problems Ever**: Persistent state management tracks every problem ever sent across all platforms via canonical URL slugs and normalized titles.
 
 ---
@@ -287,7 +287,7 @@ Environment variables can be defined in `.env` (for local runs) or GitHub Reposi
 ### Configurable Constants (`config.py`)
 - `DAILY_EASY = 1`, `DAILY_MEDIUM = 2`, `DAILY_HARD = 1`: Customizes the daily difficulty quota.
 - `SOURCE_PRIORITY = ["a2z_sheet", "leetcode", "gfg", "codeforces"]`: Order of priority when selecting problems.
-- `GEMINI_MODEL = "gemini-2.0-flash"`: Fast, high-performance Gemini model used for agent orchestration and insights.
+- `GEMINI_MODEL = "gemini-2.5-flash"`: Fast, high-performance Gemini model used for agent orchestration and insights (overridable via `GEMINI_MODEL` env var).
 
 ---
 

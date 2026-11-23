@@ -118960,5 +118960,167 @@
     "source": "codeforces",
     "url": "https://codeforces.com/problemset/problem/1/A",
     "platform": "codeforces"
+  },
+  {
+    "id": "a2z-0062",
+    "title": "Factorial of a Given Number",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "url": "https://takeuforward.org/practice/dsa/factorial-of-a-given-number-ii",
+    "platform": "takeuforward"
+  },
+  {
+    "id": "a2z-0064",
+    "title": "Reverse a String I",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/reverse-string/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0065",
+    "title": "Check if String is Palindrome or Not",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/valid-palindrome/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0083",
+    "title": "Left Rotate Array by K Places",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/rotate-array/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0100",
+    "title": "4 Sum",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/4sum/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0112",
+    "title": "Largest Subarray with Sum 0",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/maximum-size-subarray-sum-equals-k/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0136",
+    "title": "Book Allocation Problem",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/split-array-largest-sum/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0141",
+    "title": "Split array - largest sum",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/split-array-largest-sum/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0164",
+    "title": "Subsets I",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/subsets/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0202",
+    "title": "Reverse a LL",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/reverse-linked-list/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0232",
+    "title": "Power Set Bit Manipulation",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/subsets/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0321",
+    "title": "Morris Inorder Traversal",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/binary-tree-inorder-traversal/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0322",
+    "title": "Morris Preorder Traversal",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/binary-tree-preorder-traversal/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0349",
+    "title": "Merge K sorted Lists",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0372",
+    "title": "Detect a cycle in a directed graph",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/course-schedule/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0374",
+    "title": "Course Schedule I",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/course-schedule/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0408",
+    "title": "House robber",
+    "topic": "Arrays",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/house-robber-ii/",
+    "platform": "leetcode"
+  },
+  {
+    "id": "a2z-0473",
+    "title": "Count primes in range L to R",
+    "topic": "Arrays",
+    "difficulty": "Hard",
+    "source": "a2z_sheet",
+    "url": "https://leetcode.com/problems/count-primes/",
+    "platform": "leetcode"
   }
 ]
