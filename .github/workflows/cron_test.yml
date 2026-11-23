@@ -3,6 +3,7 @@ name: Cron Job
 on:
   schedule:
     - cron: "2-59/5 * * * *"
+      timezone: "Asia/Kolkata" 
   workflow_dispatch:
 
 jobs:
