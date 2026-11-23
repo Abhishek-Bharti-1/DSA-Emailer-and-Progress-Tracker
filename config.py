@@ -84,3 +84,10 @@ TOPICS = [
     "Recursion",
     "Sorting",
 ]
+
+# ── Dashboard URL ─────────────────────────────────────
+DASHBOARD_URL = _clean_env(
+    "DASHBOARD_URL",
+    "https://abhishek-bharti-1.github.io/DSA-Emailer-and-Progress-Tracker/"
+)
+

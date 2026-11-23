@@ -280,7 +280,7 @@ If you prefer running via GitHub Actions:
 - **Visual Style**: Clean dark navy theme (`#1a1a2e`), card panels (`#16213e`), and crimson accents (`#e94560`).
 - **Mystery Content**: Each problem card lists **only** the problem name and a "Solve Problem &rarr;" button.
 - **Hidden Metadata**: Difficulty levels, topic classifications, and source platforms are **intentionally omitted** so you approach each problem without bias.
-- **Footer**: Tracks lifetime consistency: `Day X • Y/Z A2Z problems completed` followed by `Happy Coding! 🚀`.
+- **Footer**: Tracks lifetime consistency (`Day X • Y/Z A2Z problems completed`), a motivational prompt, and an **interactive button linking directly to your live Progress Dashboard**.
 
 ### 2. Weekly Progress Report
 - **Subject**: `📊 Weekly DSA Progress — Week N`
@@ -290,6 +290,7 @@ If you prefer running via GitHub Actions:
 - **Visual Difficulty Distribution**: Colored progress bars for Easy (Green), Medium (Amber), and Hard (Crimson) problems.
 - **A2Z Sheet Progress**: Percentage bar displaying completion of Striver's A2Z DSA sheet.
 - **AI Coaching Insights**: Gemini generates personalized feedback, highlighting consistency, strengths, and recommended focus areas for the upcoming week.
+- **Dashboard Shortcut**: Direct button to open your live GitHub Pages dashboard to review question history, track solved status, and revisit bookmarked problems.
 
 ---
 

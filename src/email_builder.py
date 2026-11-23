@@ -13,6 +13,16 @@ import re
 from datetime import datetime, timedelta
 from typing import Any, Optional
 
+try:
+    import config
+    DEFAULT_DASHBOARD_URL = getattr(
+        config,
+        "DASHBOARD_URL",
+        "https://abhishek-bharti-1.github.io/DSA-Emailer-and-Progress-Tracker/"
+    )
+except Exception:
+    DEFAULT_DASHBOARD_URL = "https://abhishek-bharti-1.github.io/DSA-Emailer-and-Progress-Tracker/"
+
 __all__ = ["build_daily_email", "build_weekly_email"]
 
 # ── Color Palette & Theme Constants ──────────────────────────────────────────
@@ -174,6 +184,7 @@ def build_daily_email(
     problems: list[dict[str, Any]],
     stats: dict[str, Any],
     current_date: Optional[datetime] = None,
+    dashboard_url: Optional[str] = None,
 ) -> tuple[str, str]:
     """
     Build styled HTML email for daily DSA practice problems.
@@ -212,6 +223,9 @@ def build_daily_email(
     day_num = _extract_day_number(stats)
     a2z_sent = stats.get("a2z_sent", 0) if isinstance(stats, dict) else 0
     a2z_total = stats.get("a2z_total", 0) if isinstance(stats, dict) else 0
+
+    target_dashboard = (dashboard_url or DEFAULT_DASHBOARD_URL).strip()
+    escaped_dashboard_url = html.escape(target_dashboard)
 
     # Build problem cards (ONLY Problem title & Clickable URL link; NO topic/difficulty/source)
     problem_cards: list[str] = []
@@ -344,9 +358,14 @@ def build_daily_email(
                     <p style="margin: 0 0 10px 0; font-size: 15px; font-weight: 600; color: {COLOR_ACCENT}; letter-spacing: 0.3px;">
                       Day {day_num} • {a2z_sent}/{a2z_total} A2Z problems completed
                     </p>
-                    <p style="margin: 0; font-size: 17px; font-weight: 700; color: {COLOR_TEXT_PRIMARY};">
+                    <p style="margin: 0 0 16px 0; font-size: 17px; font-weight: 700; color: {COLOR_TEXT_PRIMARY};">
                       Happy Coding! 🚀
                     </p>
+                    <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid {COLOR_BORDER};">
+                      <a href="{escaped_dashboard_url}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: rgba(233, 69, 96, 0.12); border: 1px solid {COLOR_ACCENT}; color: #ffffff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 10px 22px; border-radius: 8px; letter-spacing: 0.3px;">
+                        📊 Open Live Progress Dashboard &rarr;
+                      </a>
+                    </div>
                   </td>
                 </tr>
               </table>
@@ -369,6 +388,7 @@ def build_weekly_email(
     stats: dict[str, Any],
     ai_insights: str,
     current_date: Optional[datetime] = None,
+    dashboard_url: Optional[str] = None,
 ) -> tuple[str, str]:
     """
     Build styled HTML email for weekly DSA progress reports.
@@ -432,6 +452,9 @@ def build_weekly_email(
     total_sent = stats.get("total_sent", 0) if isinstance(stats, dict) else 0
     a2z_sent = stats.get("a2z_sent", 0) if isinstance(stats, dict) else 0
     a2z_total = stats.get("a2z_total", 0) if isinstance(stats, dict) else 0
+
+    target_dashboard = (dashboard_url or DEFAULT_DASHBOARD_URL).strip()
+    escaped_dashboard_url = html.escape(target_dashboard)
 
     # Extract & format topics covered
     topics_raw = stats.get("topics_covered", []) if isinstance(stats, dict) else []
@@ -729,9 +752,14 @@ def build_weekly_email(
               <table width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: {COLOR_BG_CARD}; border: 1px solid {COLOR_BORDER}; border-radius: 14px;">
                 <tr>
                   <td align="center" style="padding: 26px 24px; text-align: center;">
-                    <p style="margin: 0; font-size: 18px; font-weight: 700; color: {COLOR_TEXT_PRIMARY};">
+                    <p style="margin: 0 0 16px 0; font-size: 18px; font-weight: 700; color: {COLOR_TEXT_PRIMARY};">
                       Keep going! 💪
                     </p>
+                    <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid {COLOR_BORDER};">
+                      <a href="{escaped_dashboard_url}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: rgba(233, 69, 96, 0.12); border: 1px solid {COLOR_ACCENT}; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: 8px; letter-spacing: 0.3px;">
+                        📊 View Full Analytics & History &rarr;
+                      </a>
+                    </div>
                   </td>
                 </tr>
               </table>
