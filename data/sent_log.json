@@ -30,5 +30,37 @@
     "difficulty": "Hard",
     "source": "leetcode",
     "date": "2026-11-22"
+  },
+  {
+    "id": "a2z-0016",
+    "title": "Pattern 9",
+    "topic": "Arrays",
+    "difficulty": "Easy",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0410",
+    "title": "Grid unique paths",
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "a2z-0274",
+    "title": "Next Greater Element",
+    "topic": "Stacks & Queues",
+    "difficulty": "Medium",
+    "source": "a2z_sheet",
+    "date": "2026-11-23"
+  },
+  {
+    "id": "lc-899",
+    "title": "Orderly Queue",
+    "topic": "Sorting",
+    "difficulty": "Hard",
+    "source": "leetcode",
+    "date": "2026-11-23"
   }
 ]

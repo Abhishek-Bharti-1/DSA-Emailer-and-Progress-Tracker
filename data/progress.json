@@ -1,24 +1,27 @@
 {
-  "total_sent": 4,
+  "total_sent": 8,
   "by_source": {
-    "a2z_sheet": 3,
-    "leetcode": 1
+    "a2z_sheet": 6,
+    "leetcode": 2
   },
   "by_topic": {
-    "Arrays": 1,
-    "Dynamic Programming": 1,
+    "Arrays": 2,
+    "Dynamic Programming": 2,
     "Strings": 1,
-    "Math": 1
+    "Math": 1,
+    "Stacks & Queues": 1,
+    "Sorting": 1
   },
   "by_difficulty": {
-    "Easy": 1,
-    "Medium": 2,
-    "Hard": 1
+    "Easy": 2,
+    "Medium": 4,
+    "Hard": 2
   },
-  "streak_days": 1,
+  "streak_days": 2,
   "a2z_total": 182,
-  "a2z_sent": 3,
+  "a2z_sent": 6,
   "dates": [
-    "2026-11-22"
+    "2026-11-22",
+    "2026-11-23"
   ]
 }
