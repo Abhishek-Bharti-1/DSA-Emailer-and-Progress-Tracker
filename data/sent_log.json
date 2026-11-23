@@ -56,9 +56,9 @@
     "date": "2026-11-23"
   },
   {
-    "id": "lc-2366",
-    "title": "Minimum Replacements to Sort the Array",
-    "topic": "Greedy",
+    "id": "lc-899",
+    "title": "Orderly Queue",
+    "topic": "Sorting",
     "difficulty": "Hard",
     "source": "leetcode",
     "date": "2026-11-23"
@@ -98,6 +98,8 @@
   {
     "id": "a2z-0185",
     "title": "Find the length of the Linked List",
+    "id": "a2z-0078",
+    "title": "Linear Search",
     "topic": "Arrays",
     "difficulty": "Easy",
     "source": "a2z_sheet",
@@ -132,6 +134,10 @@
     "title": "Inorder Traversal",
     "topic": "Arrays",
     "difficulty": "Easy",
+    "id": "a2z-0151",
+    "title": "Count Number of Substrings",
+    "topic": "Strings",
+    "difficulty": "Medium",
     "source": "a2z_sheet",
     "date": "2026-11-23"
   },
@@ -155,6 +161,9 @@
     "id": "lc-2508",
     "title": "Add Edges to Make Degrees of All Nodes Even",
     "topic": "Graphs",
+    "id": "lc-381",
+    "title": "Insert Delete GetRandom O(1) - Duplicates allowed",
+    "topic": "Math",
     "difficulty": "Hard",
     "source": "leetcode",
     "date": "2026-11-23"
